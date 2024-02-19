@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>John S's To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input, button {
+            margin-bottom: 10px;
+        }
+        li {
+            list-style-type: none;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>John S's Task List</h2>
+    <p>Hey there! I'm John S, and this is my simple To-Do List for my web dev class.</p>
+    <input id="userName" type="text" placeholder="Enter your name to personalize" onblur="saveName()" />
+    <input id="newTask" type="text" placeholder="What's next on the agenda?" />
+    <button onclick="addTask()">Add to List</button>
+    <ul id="tasksList"></ul>
+
+    <script>
+        // When the page loads, let's get our user's name and any saved tasks
+        document.addEventListener('DOMContentLoaded', function() {
+            loadName();
+            loadTasks();
+        });
+
+        function saveName() {
+            const name = document.getElementById('userName').value;
+            localStorage.setItem('userName', name);
+        }
+
+        function loadName() {
+            const name = localStorage.getItem('userName') || 'John S';
+            document.getElementById('userName').value = name;
+            document.title = name + "'s To-Do List"; // Personalize the title
+        }
+
+        function addTask() {
+            const taskValue = document.getElementById('newTask').value;
+            if (taskValue) {
+                const li = document.createElement('li');
+                li.textContent = taskValue;
+                document.getElementById('tasksList').appendChild(li);
+                saveTasks();
+                document.getElementById('newTask').value = '';
+            }
+        }
+
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll('#tasksList li').forEach(task => {
+                tasks.push(task.textContent);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.textContent = task;
+                document.getElementById('tasksList').appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
